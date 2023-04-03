@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -48,6 +49,14 @@ namespace WebAPI.Controllers
                 return Ok(result.Data);
             }
             return BadRequest(result.Message);
+        }
+
+        [HttpPost("changepassword")]
+        [Authorize("Member")]
+        public ActionResult ChangePassword(string oldPassword, string newPassword , string newPasswordAgain)
+        {
+
+            
         }
     }
 }
