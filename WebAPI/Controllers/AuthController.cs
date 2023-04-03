@@ -53,9 +53,10 @@ namespace WebAPI.Controllers
 
         [HttpPost("changepassword")]
         [Authorize("Member")]
-        public ActionResult ChangePassword(string oldPassword, string newPassword , string newPasswordAgain)
+        
+        public ActionResult ChangePassword(string oldPassword, string newPassword , string confirmPassword)
         {
-
+            
             
         }
     }

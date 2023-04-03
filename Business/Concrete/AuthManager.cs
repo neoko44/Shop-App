@@ -48,8 +48,8 @@ namespace Business.Concrete
 
         public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
         {
-            byte[] passwordHash,passwordSalt;
-            
+            byte[] passwordHash, passwordSalt;
+
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
             var user = new User
             {
@@ -72,6 +72,28 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.UserAlreadyExists);
             }
             return new SuccessResult();
+        }
+
+        public IDataResult<User> ChangePassword(User user, UserForLoginDto userForLoginDto, string oldPassword, string newPassword)
+        //giriş yapan kullanıcının şifresini değiştir
+        {
+            if (oldPassword == newPassword)
+            {
+                return new ErrorDataResult<User>(Messages.NewPassMustDifferent);
+            }
+
+            var logCheck = _userService.GetByMail(userForLoginDto.Email);
+            if (logCheck != null)
+            {
+                byte[] passwordSalt, passwordHash;
+                userForLoginDto.Password = newPassword;
+
+                HashingHelper.CreatePasswordHash(newPassword, out passwordHash, out passwordSalt);
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+            }
+                return new SuccessDataResult<User>(Messages.PassChangeSuccess);
+
         }
     }
 }
