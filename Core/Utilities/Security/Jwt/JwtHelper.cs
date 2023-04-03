@@ -32,6 +32,13 @@ namespace Core.Utilities.Security.Jwt
             var jwt = CreateJwtSecurityToken(_tokenOptions, user, signingCredentials,operationClaims);
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             var token = jwtSecurityTokenHandler.WriteToken(jwt);
+            var decodedToken = jwtSecurityTokenHandler.ReadJwtToken(token);
+
+            new DecryptToken
+            {
+                DecryptedToken = decodedToken.ToString()
+            };
+            
 
             return new AccessToken
             {
@@ -40,6 +47,16 @@ namespace Core.Utilities.Security.Jwt
             };
 
         }
+        public string GetIdTokenExpiry(string idtoken)
+        {
+            var token = new JwtSecurityToken(jwtEncodedString: idtoken);
+            string expiry = token.Claims.First(c => c.Type == "email").Value;
+            return expiry;
+        }
+        //public string DecryptJwtToken(string token)
+        //{
+
+        //}
         public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, User user, SigningCredentials signingCredentials, List<OperationClaim> operationClaims)
         {
             var jwt = new JwtSecurityToken

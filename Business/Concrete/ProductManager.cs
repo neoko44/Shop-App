@@ -13,6 +13,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
@@ -44,18 +45,18 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetList(p => p.CategoryId == categoryId).ToList());
         }
 
-        //[CacheRemoveAspect("IProductService.Get")]   
-        public IResult Add(Product product)
-        {
-            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), CheckIfCategoryIsEnabled());
+        //[Authorize("Admin")]
+        //public IResult Add(Product product)
+        //{
+        //    IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), CheckIfCategoryIsEnabled());
 
-            if (result != null)
-            {
-                return result;
-            }
-            _productDal.Add(product);
-            return new SuccessResult(Messages.ProductAdded);
-        }
+        //    if (result != null)
+        //    {
+        //        return result;
+        //    }
+        //    _productDal.Add(product);
+        //    return new SuccessResult(Messages.ProductAdded);
+        //}
 
         private IResult CheckIfProductNameExists(string productName)
         {
