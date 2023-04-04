@@ -15,6 +15,7 @@ namespace Core.Entities.Concrete
         public string Phone { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
+        public int RoleId { get; set; }
         public byte[] PasswordSalt { get; set; }
         public byte[] PasswordHash { get; set; }
         public bool Status { get; set; }

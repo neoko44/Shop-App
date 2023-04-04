@@ -45,6 +45,11 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetList(p => p.CategoryId == categoryId).ToList());
         }
 
+        public IDataResult<List<Product>> GetProductByName(string productName)
+        {
+            return new SuccessDataResult<List<Product>>(_productDal.GetList(p=>p.ProductName.Contains(productName)).ToList());
+        }
+
         //[Authorize("Admin")]
         //public IResult Add(Product product)
         //{
@@ -58,28 +63,28 @@ namespace Business.Concrete
         //    return new SuccessResult(Messages.ProductAdded);
         //}
 
-        private IResult CheckIfProductNameExists(string productName)
-        {
+        //private IResult CheckIfProductNameExists(string productName)
+        //{
 
-            var result = _productDal.GetList(p => p.ProductName == productName).Any();
-            if (result)
-            {
-                return new ErrorResult(Messages.ProductNameAlreadyExists);
-            }
+        //    var result = _productDal.GetList(p => p.ProductName == productName).Any();
+        //    if (result)
+        //    {
+        //        return new ErrorResult(Messages.ProductNameAlreadyExists);
+        //    }
 
-            return new SuccessResult();
-        }
+        //    return new SuccessResult();
+        //}
 
-        private IResult CheckIfCategoryIsEnabled()
-        {
-            var result = _categoryService.GetList();
-            if (result.Data.Count < 10)
-            {
-                return new ErrorResult(Messages.ProductNameAlreadyExists);
-            }
+        //private IResult CheckIfCategoryIsEnabled()
+        //{
+        //    var result = _categoryService.GetList();
+        //    if (result.Data.Count < 10)
+        //    {
+        //        return new ErrorResult(Messages.ProductNameAlreadyExists);
+        //    }
 
-            return new SuccessResult();
-        }
+        //    return new SuccessResult();
+        //}
 
         public IResult Delete(Product product)
         {

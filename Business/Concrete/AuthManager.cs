@@ -66,10 +66,12 @@ namespace Business.Concrete
                 Phone = userForRegisterDto.Phone,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
+                RoleId =1,
                 Status = true
             };
             
             _userService.Add(user);
+            
 
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }

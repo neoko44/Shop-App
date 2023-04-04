@@ -17,12 +17,12 @@ namespace Business.Concrete
         private ICategoryDal _categoryDal;
         private IProductDal _productDal;
 
-        public CategoryManager(ICategoryDal categoryDal,IProductDal productDal)
+        public CategoryManager(ICategoryDal categoryDal, IProductDal productDal)
         {
             _categoryDal = categoryDal;
             _productDal = productDal;
         }
-        
+
         public IResult Add(Category category)
         {
             _categoryDal.Add(category);
@@ -40,9 +40,14 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetList(p => p.CategoryId == categoryId).ToList());
         }
 
+        public IDataResult<Category> GetByName(string categoryName)
+        {
+            return new SuccessDataResult<Category>(_categoryDal.Get(p => p.CategoryName.Contains(categoryName)));
+        }
+
         public IDataResult<Category> GetById(int categoryId)
         {
-            return new SuccessDataResult<Category>(_categoryDal.Get(p=>p.CategoryId == categoryId));
+            return new SuccessDataResult<Category>(_categoryDal.Get(p => p.CategoryId == categoryId));
         }
 
         public IDataResult<List<Category>> GetList()

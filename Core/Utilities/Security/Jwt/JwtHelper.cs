@@ -45,7 +45,8 @@ namespace Core.Utilities.Security.Jwt
             var token = new JwtSecurityToken(jwtEncodedString: idtoken);
             string email = token.Claims.First(c => c.Type == "email").Value;
             string phone = token.Claims.First(c => c.Type == "mobilephone").Value;
-            string NameSurname = token.Claims.First(c=>c.Type == "name").Value;
+            string NameSurname = token.Claims.First(c => c.Type == "name").Value;
+            string UserId = token.Claims.First(c => c.Type == "nameidentifier").Value;
             return new List<string> { email, phone, NameSurname }.ToString();
         }
         //public string DecryptJwtToken(string token)

@@ -29,6 +29,17 @@ namespace WebAPI.Controllers //apilerde isimler çoğul yazılır(ProductsContro
             return BadRequest(result.Message);
         }
 
+        [HttpGet("getcategorybyname")]
+        public IActionResult GetCategoryByName(string categoryName)
+        {
+            var result = _categoryService.GetByName(categoryName);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Message);
+        }
+
         //[HttpGet("getproductsbycategoryid")]
         //public IActionResult GetListByCategory(int categoryId)
         //{

@@ -27,9 +27,10 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result.Message);
         }
-        [Authorize(Roles = "Admin")]
+
+        //[Authorize(Roles = "Admin")]
         [HttpGet("getproductsbycategoryid")]
-        public IActionResult GetListByCategory(int categoryId) 
+        public IActionResult GetListByCategoryId(int categoryId) 
         { 
             var result = _productService.GetListByCategory(categoryId);
             if(result.Success)
@@ -38,6 +39,18 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result.Message);
         }
+
+        [HttpGet("getproductbyname")]
+        public IActionResult GetProductByName(string productName) 
+        {
+            var result = _productService.GetProductByName(productName);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Message);
+        }
+
 
         
     }
