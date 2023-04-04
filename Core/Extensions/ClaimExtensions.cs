@@ -28,5 +28,15 @@ namespace Core.Extensions
         {
             roles.ToList().ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
         }
+
+        public static void AddPhone(this ICollection<Claim> claims, string phone)
+        {
+            claims.Add(new Claim(ClaimTypes.MobilePhone, phone));
+        }
+
+        public static void AddCity(this ICollection<Claim> claims, string city)
+        {
+            claims.Add(new Claim(ClaimTypes.Country, city));    
+        }
     }
 }

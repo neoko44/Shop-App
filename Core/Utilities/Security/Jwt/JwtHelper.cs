@@ -32,14 +32,7 @@ namespace Core.Utilities.Security.Jwt
             var jwt = CreateJwtSecurityToken(_tokenOptions, user, signingCredentials,operationClaims);
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             var token = jwtSecurityTokenHandler.WriteToken(jwt);
-            var decodedToken = jwtSecurityTokenHandler.ReadJwtToken(token);
-
-            new DecryptToken
-            {
-                DecryptedToken = decodedToken.ToString()
-            };
             
-
             return new AccessToken
             {
                 Token = token,
@@ -47,11 +40,13 @@ namespace Core.Utilities.Security.Jwt
             };
 
         }
-        public string GetIdTokenExpiry(string idtoken)
+        public string GetTokenInfo(string idtoken)
         {
             var token = new JwtSecurityToken(jwtEncodedString: idtoken);
-            string expiry = token.Claims.First(c => c.Type == "email").Value;
-            return expiry;
+            string email = token.Claims.First(c => c.Type == "email").Value;
+            string phone = token.Claims.First(c => c.Type == "mobilephone").Value;
+            string NameSurname = token.Claims.First(c=>c.Type == "name").Value;
+            return new List<string> { email, phone, NameSurname }.ToString();
         }
         //public string DecryptJwtToken(string token)
         //{
@@ -75,7 +70,9 @@ namespace Core.Utilities.Security.Jwt
             var claims = new List<Claim>();
             claims.AddNameIdentifier(user.Id.ToString());
             claims.AddEmail(user.Email);
-            claims.AddName($"{user.FirstName}{user.LastName}");
+            claims.AddName($"{user.FirstName} {user.LastName}");
+            claims.AddPhone(user.Phone);
+            claims.AddCity(user.City);
             claims.AddRoles(operationClaims.Select(c=>c.Name).ToArray());
             return claims;
 

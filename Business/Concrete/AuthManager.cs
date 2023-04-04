@@ -23,6 +23,7 @@ namespace Business.Concrete
         IUserService _userService;
         ITokenHelper _tokenHelper;
         IUserDal _userDal;
+        
 
         public AuthManager(IUserService userService, ITokenHelper tokenHelper, IUserDal userDal)
         {
@@ -57,16 +58,19 @@ namespace Business.Concrete
 
             var user = new User
             {
-                Email = userForRegisterDto.Email,
                 FirstName = userForRegisterDto.FirstName,
                 LastName = userForRegisterDto.LastName,
+                Email = userForRegisterDto.Email,
                 Address = userForRegisterDto.Address,
+                City = userForRegisterDto.City,
                 Phone = userForRegisterDto.Phone,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Status = true
             };
+            
             _userService.Add(user);
+
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
         public IResult UserExists(string email)

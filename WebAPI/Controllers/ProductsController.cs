@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,8 +27,8 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result.Message);
         }
-
-        [HttpGet("getProductsByCategoryId")]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("getproductsbycategoryid")]
         public IActionResult GetListByCategory(int categoryId) 
         { 
             var result = _productService.GetListByCategory(categoryId);

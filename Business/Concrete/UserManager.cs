@@ -32,5 +32,6 @@ namespace Business.Concrete
         {
             return _userDal.GetClaims(user);
         }
+
     }
 }
