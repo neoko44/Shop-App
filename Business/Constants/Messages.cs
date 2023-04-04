@@ -34,8 +34,8 @@ namespace Business.Constants
 
         public static string RoleAdded = "Rol başarıyla eklendi";
 
-        public static string CartAdded = "Sepet başarıyla eklendi";
-        public static string CartDeleted = "Sepet başarıyla silindi";
+        public static string ProductAddedToCart = "Ürün sepete başarıyla eklendi";
+        public static string ProductDeletedFromCart = "Ürün sepetten silindi";
         public static string CartUpdated = "Sepet başarıyla güncellendi";
     }
 }

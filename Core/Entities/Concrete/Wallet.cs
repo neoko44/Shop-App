@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Core.Entities.Concrete
 {
-    public class Cart : IEntity
+    public class Wallet:IEntity
     {
         public int Id { get; set; }
-        public int CartId { get; set; }
-        public int UserId { get; set; }
-        public int ProductId { get; set; }
+        public string UserId { get; set; }
+        public decimal Balance { get; set; }
     }
 }

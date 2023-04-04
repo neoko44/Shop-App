@@ -1,6 +1,7 @@
 ﻿using Core.Entities.Concrete;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
 
     }
 }

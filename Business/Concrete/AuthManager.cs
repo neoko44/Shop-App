@@ -24,13 +24,17 @@ namespace Business.Concrete
         ITokenHelper _tokenHelper;
         IUserDal _userDal;
         IClaimService _claimService;
+        IWalletService _walletService;
+        ICartService _cartService;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IUserDal userDal, IClaimService claimService)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IUserDal userDal, IClaimService claimService, IWalletService walletService, ICartService cartService)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
             _userDal = userDal;
             _claimService = claimService;
+            _walletService = walletService;
+            _cartService = cartService;
         }
         public IDataResult<AccessToken> CreateAccessToken(User user)
         {
@@ -45,6 +49,7 @@ namespace Business.Concrete
             {
                 return new ErrorDataResult<User>(Messages.UserNotFound);
             }
+
             if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
             {
                 return new ErrorDataResult<User>(Messages.PasswordError);
@@ -72,12 +77,22 @@ namespace Business.Concrete
             };
 
             _userService.Add(user);
+
             UserOperationClaim userOperationClaim = new UserOperationClaim()
             {
                 OperationClaimId = 1,
                 UserId = user.Id
             };
+
             _claimService.Add(userOperationClaim);
+
+            Cart cart = new Cart()
+            {
+                UserId = user.Id,
+                ProductId = 2,
+                CartId = 2
+            };
+            _cartService.Add(cart);
 
 
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
