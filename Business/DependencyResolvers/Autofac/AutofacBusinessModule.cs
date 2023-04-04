@@ -28,6 +28,12 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<AuthManager>().As<IAuthService>();
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
+            builder.RegisterType<ClaimManager>().As<IClaimService>();
+            builder.RegisterType<EfUserOperationClaimDal>().As<IUserOperationClaimDal>();
+
+            builder.RegisterType<CartManager>().As<ICartService>();
+            builder.RegisterType<EfCartDal>().As<ICartDal>();
+
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             

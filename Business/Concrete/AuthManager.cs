@@ -23,13 +23,14 @@ namespace Business.Concrete
         IUserService _userService;
         ITokenHelper _tokenHelper;
         IUserDal _userDal;
-        
+        IClaimService _claimService;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IUserDal userDal)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IUserDal userDal, IClaimService claimService)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
             _userDal = userDal;
+            _claimService = claimService;
         }
         public IDataResult<AccessToken> CreateAccessToken(User user)
         {
@@ -66,12 +67,18 @@ namespace Business.Concrete
                 Phone = userForRegisterDto.Phone,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                RoleId =1,
+                RoleId = 1,
                 Status = true
             };
-            
+
             _userService.Add(user);
-            
+            UserOperationClaim userOperationClaim = new UserOperationClaim()
+            {
+                OperationClaimId = 1,
+                UserId = user.Id
+            };
+            _claimService.Add(userOperationClaim);
+
 
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
