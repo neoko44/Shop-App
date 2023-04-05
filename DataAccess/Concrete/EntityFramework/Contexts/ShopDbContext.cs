@@ -23,6 +23,9 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<UserCart> UserCarts { get; set; }
+        public DbSet<Order> Orders { get; set; }
+
 
     }
 }

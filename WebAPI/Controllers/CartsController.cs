@@ -1,9 +1,7 @@
 ﻿using Business.Abstract;
-using Core.Entities.Concrete;
 using DataAccess.Abstract;
-using Entities.Concrete;
+using DataAccess.Concrete.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace WebAPI.Controllers
@@ -13,34 +11,35 @@ namespace WebAPI.Controllers
     public class CartsController : ControllerBase
     {
         ICartService _cartService;
-        IUserDal _userDal;
-        public CartsController(ICartService cartService, IUserDal userDal)
+        IProductService _productService;
+        public CartsController(ICartService cartService, IProductService productService)
         {
             _cartService = cartService;
-            _userDal = userDal;
+            _productService = productService;
         }
 
-        [HttpGet("addtocart")]
-        public IActionResult AddToCart(int productId, string token)
+        [HttpPost("addtocart")]
+        public IActionResult AddToCart(int productId, int quantity, string token)
         {
-            var tokenClaim = new JwtSecurityToken(jwtEncodedString: token);
-            string Id = tokenClaim.Claims.First(c => c.Type == "nameid").Value;
-            int userId = Convert.ToInt32(Id);
-            var user = _userDal.Get(x => x.Id == userId);
+            var result = _cartService.Add(productId, quantity, token);
 
-            Cart cart = new Cart
-            {
-                ProductId = productId,
-                UserId = user.Id,
-            };
-
-            var result = _cartService.Add(cart);
             if (result.Success)
             {
                 return Ok(result.Message);
             }
             return BadRequest(result.Message);
 
+        }
+
+        [HttpGet("getcart")]
+        public IActionResult GetCart(string token)
+        {
+            var result = _cartService.GetList(token);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Message);
         }
     }
 }

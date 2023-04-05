@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace Core.Entities.Concrete
 {
-    public class Cart : IEntity
+    public class Order : IEntity
     {
         public int Id { get; set; }
-        public int Quantity { get; set; }
         public int UserId { get; set; }
-        public int? ProductId { get; set; }
-        public int CartId { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime ShippedDate { get; set; }
+        public decimal Freight { get; set; }
+        public bool Status { get; set; }
+        public string Description { get; set; }
         public decimal TotalPrice { get; set; }
+
     }
 }

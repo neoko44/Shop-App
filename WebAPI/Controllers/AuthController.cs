@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
             var changePassResult = _authService.ChangePassword(newPassword, token);
             if (changePassResult.Success)
             {
-                return Ok(changePassResult.Data);
+                return Ok(changePassResult.Message);
             }
             else return BadRequest(changePassResult.Message);
         }

@@ -25,16 +25,16 @@ namespace Business.Concrete
         IUserDal _userDal;
         IClaimService _claimService;
         IWalletService _walletService;
-        ICartService _cartService;
+        IUserCartService _userCartService;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IUserDal userDal, IClaimService claimService, IWalletService walletService, ICartService cartService)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IUserDal userDal, IClaimService claimService,  IWalletService walletService, IUserCartService userCartService)
         {
-            _userService = userService;
             _tokenHelper = tokenHelper;
             _userDal = userDal;
+            _userService = userService;
             _claimService = claimService;
             _walletService = walletService;
-            _cartService = cartService;
+            _userCartService = userCartService;
         }
         public IDataResult<AccessToken> CreateAccessToken(User user)
         {
@@ -72,27 +72,35 @@ namespace Business.Concrete
                 Phone = userForRegisterDto.Phone,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                RoleId = 1,
+                RoleId = 1002,
                 Status = true
             };
-
+            
             _userService.Add(user);
 
             UserOperationClaim userOperationClaim = new UserOperationClaim()
             {
-                OperationClaimId = 1,
+                OperationClaimId = 1002,
                 UserId = user.Id
             };
-
             _claimService.Add(userOperationClaim);
 
-            Cart cart = new Cart()
+            UserCart userCart = new UserCart()
             {
                 UserId = user.Id,
-                ProductId = 2,
-                CartId = 2
+                CreatedDate = DateTime.Now,
+                IsOrder = false,
             };
-            _cartService.Add(cart);
+            _userCartService.Add(userCart);
+
+
+            Wallet wallet = new Wallet()
+            {
+                Balance = 0,
+                UserId = user.Id
+            };
+            _walletService.Add(wallet);
+
 
 
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
@@ -112,16 +120,16 @@ namespace Business.Concrete
             string email = tokenClaim.Claims.First(c => c.Type == "email").Value;
             var user = _userDal.Get(x => x.Email == email); //tokeni decrypt et . içerisinden mail kısmını bul
                                                             //bu mailin veri tabanında denk geldiği kullanıcıyı getir.
-            byte[] passwordSalt, passwordHash;
 
-            HashingHelper.CreatePasswordHash(newPassword, out passwordHash, out passwordSalt);//eski şifreyi kontrol et
 
-            if (user.PasswordHash == passwordHash)
+            if (HashingHelper.VerifyPasswordHash(newPassword,user.PasswordHash,user.PasswordSalt))
             {
                 return new ErrorDataResult<User>(Messages.NewPassMustDifferent);
             }
             else
             {
+                byte[] passwordHash, passwordSalt;
+                HashingHelper.CreatePasswordHash(newPassword, out passwordHash, out passwordSalt);//eski şifreyi kontrol et
                 user.PasswordSalt = passwordSalt;
                 user.PasswordHash = passwordHash;
 

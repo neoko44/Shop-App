@@ -34,8 +34,14 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<CartManager>().As<ICartService>();
             builder.RegisterType<EfCartDal>().As<ICartDal>();
 
-            builder.RegisterType<CartManager>().As<ICartService>();
-            builder.RegisterType<EfCartDal>().As<ICartDal>();
+            builder.RegisterType<WalletManager>().As<IWalletService>();
+            builder.RegisterType<EfWalletDal>().As<IWalletDal>();
+
+            builder.RegisterType<UserCartManager>().As<IUserCartService>();
+            builder.RegisterType<EfUserCartDal>().As<IUserCartDal>();
+
+            builder.RegisterType<OrderManager>().As<IOrderService>();
+            builder.RegisterType<EfOrderDal>().As<IOrderDal>();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
