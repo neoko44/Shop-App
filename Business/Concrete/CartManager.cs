@@ -35,15 +35,28 @@ namespace Business.Concrete
             _userCartDal = userCartDal;
         }
 
-        public IResult Add(int productId, int quantity, string token)
+        public IResult Add(int productId, short quantity, string token)
         {
             var tokenClaim = new JwtSecurityToken(jwtEncodedString: token);
             int userId = Convert.ToInt32(tokenClaim.Claims.First(c => c.Type == "nameid").Value);
             var user = _userDal.Get(x => x.Id == userId);//tokeni decrypt et ve tokendeki id'ye ait kullanıcıyı getir
 
             var Product = _productDal.Get(p => p.ProductId == productId);//kullanıcının girdiği productId değerine ait ürünü getir
-            var UserCart = _userCartDal.Get(uc => uc.UserId == user.Id);
-            var getCart = _cartDal.Get(c => c.UserId == user.Id && c.CartId == UserCart.Id && c.ProductId == productId);
+            var UserCart = _userCartDal.Get(uc => uc.UserId == user.Id && uc.IsOrder == false);
+
+            if(UserCart == null)
+            {
+                UserCart userCart = new UserCart
+                {
+                    IsOrder = false,
+                    CreatedDate = DateTime.Now,
+                    UserId = userId
+                };
+                _userCartDal.Add(userCart);
+            }
+            var newUserCart = _userCartDal.Get(uc =>uc.UserId == user.Id && uc.IsOrder == false);
+
+            var getCart = _cartDal.Get(c => c.UserId == user.Id && c.CartId == newUserCart.Id && c.ProductId == productId && c.IsOrder == false);
 
             Cart cart = new Cart
             {
@@ -51,7 +64,8 @@ namespace Business.Concrete
                 UserId = user.Id,
                 Quantity = quantity,
                 TotalPrice = quantity * Product.UnitPrice,
-                CartId = UserCart.Id
+                CartId = newUserCart.Id,
+                IsOrder = false
             };
 
 
@@ -79,11 +93,12 @@ namespace Business.Concrete
                 return new ErrorDataResult<Cart>(Messages.InsufficientStock);
 
 
-            getCart.Quantity = quantity + getCart.Quantity;
+            getCart.Quantity += quantity;
             getCart.TotalPrice = getCart.Quantity * Product.UnitPrice;
-            getCart.CartId = UserCart.Id;
+            getCart.CartId = newUserCart.Id;
             getCart.UserId = user.Id;
             getCart.ProductId = productId;
+            getCart.IsOrder = false;
 
 
             _cartDal.Update(getCart);
@@ -91,14 +106,14 @@ namespace Business.Concrete
 
         }
 
-        public IResult Delete(int productId, int quantity, string token)
+        public IResult Delete(int productId, short quantity, string token)
         {
             var tokenClaim = new JwtSecurityToken(jwtEncodedString: token);
             int userId = Convert.ToInt32(tokenClaim.Claims.First(c => c.Type == "nameid").Value);
             var user = _userDal.Get(x => x.Id == userId);//tokeni decrypt et ve tokendeki id'ye ait kullanıcıyı getir
 
             var Product = _productDal.Get(p => p.ProductId == productId);//kullanıcının girdiği productId değerine ait ürünü getir
-            var UserCart = _userCartDal.Get(uc => uc.UserId == user.Id);
+            var UserCart = _userCartDal.Get(uc => uc.UserId == user.Id&&uc.IsOrder==false);
             var getCart = _cartDal.Get(c => c.UserId == user.Id && c.CartId == UserCart.Id && c.ProductId == productId);
 
             if (getCart == null)
@@ -115,10 +130,10 @@ namespace Business.Concrete
             _cartDal.Update(getCart);
 
 
-            //if(getCart.Quantity == 0)
-            //{
-
-            //}
+            if (getCart.Quantity == 0)
+            {
+                _cartDal.Delete(getCart);
+            }
             return new SuccessDataResult<Cart>(Messages.ProductRemovedFromCart);
 
         }
@@ -151,7 +166,7 @@ namespace Business.Concrete
             int userId = Convert.ToInt32(tokenClaim.Claims.First(c => c.Type == "nameid").Value);
             var user = _userDal.Get(x => x.Id == userId);//tokeni decrypt et ve tokendeki id'ye ait kullanıcıyı getir
 
-            var getCart = _cartDal.GetList(x => x.UserId == user.Id).ToList();
+            var getCart = _cartDal.GetList(x => x.UserId == user.Id&&x.IsOrder==false).ToList();
             List<ProductPreviewDto> products = new();
 
             foreach (var product in getCart)

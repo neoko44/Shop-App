@@ -50,5 +50,11 @@ namespace Business.Constants
         public static string ProductNotFound = "Ürün bulunamadı";
 
         public static string ProductRemovedFromCart = "Ürün sepetten silindi";
+
+        public static string OrderAlreadyExists = "Siparişiniz zaten oluşturulmuş";
+
+        public static string NotEnoughBalance = "Yetersiz Bakiye";
+
+        public static string NoOrder = "Geçmiş siparişiniz yok";
     }
 }

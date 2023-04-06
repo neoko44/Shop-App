@@ -1,4 +1,5 @@
 ﻿using Core.Utilities.Results;
+using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,7 @@ namespace Business.Abstract
     public interface IOrderService
     {
         IResult Add(string token);
+        IDataResult<List<OrderDto>> GetList(string token);
+        IDataResult<OrderDto> GetOrderById(int orderId);
     }
 }

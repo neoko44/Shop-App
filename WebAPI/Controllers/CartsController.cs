@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("addtocart")]
-        public IActionResult AddToCart(int productId, int quantity, string token)
+        public IActionResult AddToCart(int productId, short quantity, string token)
         {
             var result = _cartService.Add(productId, quantity, token);
 
@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("removefromcart")]
-        public IActionResult RemoveFromCart(int productId, int quantity, string token)
+        public IActionResult RemoveFromCart(int productId, short quantity, string token)
         {
             var result = _cartService.Delete(productId, quantity, token);
 

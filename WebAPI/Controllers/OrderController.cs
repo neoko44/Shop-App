@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace WebAPI.Controllers
 {
@@ -21,6 +22,28 @@ namespace WebAPI.Controllers
             if (result.Success)
             {
                 return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("getorders")]
+        public IActionResult GetOrders(string token) 
+        {
+            var result = _orderService.GetList(token);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("getorder")]
+        public IActionResult GetOrder(int orderId)
+        {
+            var result = _orderService.GetOrderById(orderId);
+            if (result.Success)
+            {
+                return Ok(result.Data);
             }
             return BadRequest(result.Message);
         }

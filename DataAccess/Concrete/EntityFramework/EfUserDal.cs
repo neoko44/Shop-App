@@ -1,5 +1,6 @@
 ﻿using Core.DataAccess.EntityFramework;
 using Core.Entities.Concrete;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using System;
@@ -12,6 +13,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfUserDal : EfEntityRepositoryBase<User, ShopDbContext>, IUserDal
     {
+
         public List<OperationClaim> GetClaims(User user)
         {
             using (var context = new ShopDbContext())

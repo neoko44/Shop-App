@@ -10,6 +10,8 @@ namespace Core.Entities.Concrete
     {
         public int Id { get; set; }
         public int UserId { get; set; }
+        public int OrderId { get; set; }
+        public int CartId { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime ShippedDate { get; set; }
         public decimal Freight { get; set; }

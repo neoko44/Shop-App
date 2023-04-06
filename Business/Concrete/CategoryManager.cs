@@ -40,9 +40,9 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetList(p => p.CategoryId == categoryId).ToList());
         }
 
-        public IDataResult<Category> GetByName(string categoryName)
+        public IDataResult<List<Category>> GetByName(string categoryName)
         {
-            return new SuccessDataResult<Category>(_categoryDal.Get(p => p.CategoryName.Contains(categoryName)));
+            return new SuccessDataResult<List<Category>>(_categoryDal.GetList(p => p.CategoryName.Contains(categoryName)).ToList());
         }
 
         public IDataResult<Category> GetById(int categoryId)
@@ -50,9 +50,20 @@ namespace Business.Concrete
             return new SuccessDataResult<Category>(_categoryDal.Get(p => p.CategoryId == categoryId));
         }
 
-        public IDataResult<List<Category>> GetList()
+        public IDataResult<List<CategoryDto>> GetList()
         {
-            return new SuccessDataResult<List<Category>>(_categoryDal.GetList().ToList());
+            var categoryDtos = new List<CategoryDto>();
+            var categories = new List<Category>(_categoryDal.GetList().ToList());
+
+            foreach (var category in categories)
+            {
+                CategoryDto categoryDto = new CategoryDto()
+                {
+                    CategoryName = category.CategoryName
+                };
+                categoryDtos.Add(categoryDto);
+            }
+            return new SuccessDataResult<List<CategoryDto>>(categoryDtos);
         }
 
         public IResult Update(Category category)
