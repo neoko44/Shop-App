@@ -43,6 +43,7 @@ namespace Business.Concrete
 
             var Product = _productDal.Get(p => p.ProductId == productId);//kullanıcının girdiği productId değerine ait ürünü getir
             var UserCart = _userCartDal.Get(uc => uc.UserId == user.Id);
+            var getCart = _cartDal.Get(c => c.UserId == user.Id && c.CartId == UserCart.Id && c.ProductId == productId);
 
             Cart cart = new Cart
             {
@@ -53,9 +54,6 @@ namespace Business.Concrete
                 CartId = UserCart.Id
             };
 
-
-            var getUserCart = _userCartDal.Get(uc => uc.UserId == user.Id);
-            var getCart = _cartDal.Get(c => c.UserId == user.Id && c.CartId == getUserCart.Id && c.ProductId == productId);
 
             if (getCart == null)
             {
@@ -79,7 +77,7 @@ namespace Business.Concrete
 
             else if (quantity + getCart.Quantity > Product.UnitsInStock)
                 return new ErrorDataResult<Cart>(Messages.InsufficientStock);
-           
+
 
             getCart.Quantity = quantity + getCart.Quantity;
             getCart.TotalPrice = getCart.Quantity * Product.UnitPrice;
@@ -93,10 +91,36 @@ namespace Business.Concrete
 
         }
 
-        public IResult Delete(Cart cart)
+        public IResult Delete(int productId, int quantity, string token)
         {
-            _cartDal.Delete(cart);
-            return new SuccessDataResult<Cart>(Messages.ProductDeletedFromCart);
+            var tokenClaim = new JwtSecurityToken(jwtEncodedString: token);
+            int userId = Convert.ToInt32(tokenClaim.Claims.First(c => c.Type == "nameid").Value);
+            var user = _userDal.Get(x => x.Id == userId);//tokeni decrypt et ve tokendeki id'ye ait kullanıcıyı getir
+
+            var Product = _productDal.Get(p => p.ProductId == productId);//kullanıcının girdiği productId değerine ait ürünü getir
+            var UserCart = _userCartDal.Get(uc => uc.UserId == user.Id);
+            var getCart = _cartDal.Get(c => c.UserId == user.Id && c.CartId == UserCart.Id && c.ProductId == productId);
+
+            if (getCart == null)
+            {
+                return new ErrorDataResult<Cart>(Messages.ProductNotFound);
+            }
+
+            getCart.Quantity -= quantity;
+            getCart.TotalPrice = getCart.Quantity * Product.UnitPrice;
+            getCart.CartId = UserCart.Id;
+            getCart.UserId = user.Id;
+            getCart.ProductId = productId;
+
+            _cartDal.Update(getCart);
+
+
+            if(getCart.Quantity == 0)
+            {
+
+            }
+            return new SuccessDataResult<Cart>(Messages.ProductRemovedFromCart);
+
         }
 
         public IResult Update(Cart cart)

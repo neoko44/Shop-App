@@ -46,5 +46,9 @@ namespace Business.Constants
         public static string CartEmpty = "Sepetiniz boş";
 
         public static string OrderCreated = "Siparişiniz başarıyla oluşturuldu";
+
+        public static string ProductNotFound = "Ürün bulunamadı";
+
+        public static string ProductRemovedFromCart = "Ürün sepetten silindi";
     }
 }

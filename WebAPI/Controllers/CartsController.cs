@@ -41,5 +41,17 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result.Message);
         }
+
+        [HttpPost("removefromcart")]
+        public IActionResult RemoveFromCart(int productId, int quantity, string token)
+        {
+            var result = _cartService.Delete(productId, quantity, token);
+
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Business.Abstract
     {
         IResult Add(int productId,int quantity,string token);
         IResult Update(Cart cart);
-        IResult Delete(Cart cart);
+        IResult Delete(int productId, int quantity, string token);
         IDataResult<List<ProductPreviewDto>> GetList(string token);
         IDataResult<Cart> GetById(int cartId);
         IDataResult<Cart> GetByUserId(int userId);
