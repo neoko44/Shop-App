@@ -115,10 +115,10 @@ namespace Business.Concrete
             _cartDal.Update(getCart);
 
 
-            if(getCart.Quantity == 0)
-            {
+            //if(getCart.Quantity == 0)
+            //{
 
-            }
+            //}
             return new SuccessDataResult<Cart>(Messages.ProductRemovedFromCart);
 
         }
