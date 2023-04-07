@@ -11,9 +11,5 @@ namespace Business.Abstract
 {
     public interface IAdminService
     {
-        IResult Add(string token, string firstName, string lastName, string Email,string password, string Phone, string Address, string City);
-
-
-
     }
 }

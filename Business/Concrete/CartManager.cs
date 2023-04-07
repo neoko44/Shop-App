@@ -41,7 +41,26 @@ namespace Business.Concrete
             int userId = Convert.ToInt32(tokenClaim.Claims.First(c => c.Type == "nameid").Value);
             var user = _userDal.Get(x => x.Id == userId);//tokeni decrypt et ve tokendeki id'ye ait kullanıcıyı getir
 
+            if(user == null)
+            {
+                return new ErrorDataResult<Cart>(Messages.InvalidToken);
+            }
+            if(productId == null)
+            {
+                return new ErrorDataResult<Cart>(Messages.IdCantBeNull);
+            }
+            if(quantity == null || quantity == 0)
+            {
+                return new ErrorDataResult<Cart>(Messages.CantBeNull);
+            }
+
             var Product = _productDal.Get(p => p.ProductId == productId);//kullanıcının girdiği productId değerine ait ürünü getir
+            if(Product == null)
+            {
+                return new ErrorDataResult<Cart>(Messages.ProductNotFound);
+            }
+
+
             var UserCart = _userCartDal.Get(uc => uc.UserId == user.Id && uc.IsOrder == false);
 
             if(UserCart == null)
@@ -58,6 +77,9 @@ namespace Business.Concrete
 
             var getCart = _cartDal.Get(c => c.UserId == user.Id && c.CartId == newUserCart.Id && c.ProductId == productId && c.IsOrder == false);
 
+
+
+
             Cart cart = new Cart
             {
                 ProductId = Product.ProductId,
@@ -67,7 +89,6 @@ namespace Business.Concrete
                 CartId = newUserCart.Id,
                 IsOrder = false
             };
-
 
             if (getCart == null)
             {
@@ -79,7 +100,6 @@ namespace Business.Concrete
                 _cartDal.Add(cart);
                 return new SuccessDataResult<Cart>(Messages.ProductAddedToCart);
             }
-
 
 
             else if (Product.ProductId != getCart.ProductId)//aynı ürün mü kontrol et
@@ -113,12 +133,34 @@ namespace Business.Concrete
             var user = _userDal.Get(x => x.Id == userId);//tokeni decrypt et ve tokendeki id'ye ait kullanıcıyı getir
 
             var Product = _productDal.Get(p => p.ProductId == productId);//kullanıcının girdiği productId değerine ait ürünü getir
+            if(Product == null)
+            {
+                return new ErrorDataResult<Cart>(Messages.ProductNotFound);
+            }
+
+            if(quantity ==null || quantity<=0)
+            {
+                return new ErrorDataResult<Cart>(Messages.QuantityNotValid);
+            }
+
+            if(quantity>Product.UnitsInStock)
+            {
+                return new ErrorDataResult<Cart>(Messages.QuantityNotValid);
+            }
+
+
             var UserCart = _userCartDal.Get(uc => uc.UserId == user.Id&&uc.IsOrder==false);
             var getCart = _cartDal.Get(c => c.UserId == user.Id && c.CartId == UserCart.Id && c.ProductId == productId);
 
             if (getCart == null)
             {
                 return new ErrorDataResult<Cart>(Messages.ProductNotFound);
+            }
+
+
+            if(quantity > getCart.Quantity) 
+            {
+                return new ErrorDataResult<Cart>(Messages.QuantityNotValid);
             }
 
             getCart.Quantity -= quantity;

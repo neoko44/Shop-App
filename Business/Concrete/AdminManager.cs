@@ -26,7 +26,7 @@ namespace Business.Concrete
         private ITokenHelper _tokenHelper;
         private IAdminService _adminService;
 
-        public AdminManager(IUserDal userDal, IProductDal productDal, ICategoryDal categoryDal, ICartDal cartDal, IOrderDal orderDal, IUserService userService, ITokenHelper tokenHelper)
+        public AdminManager(IUserDal userDal, IProductDal productDal, ICategoryDal categoryDal, ICartDal cartDal, IOrderDal orderDal, IUserService userService, ITokenHelper tokenHelper, IAdminService adminService)
         {
             _userDal = userDal;
             _productDal = productDal;
@@ -35,6 +35,7 @@ namespace Business.Concrete
             _orderDal = orderDal;
             _userService = userService;
             _tokenHelper = tokenHelper;
+            _adminService = adminService;
         }
 
         public IDataResult<AccessToken> CreateAccessToken(User user)
@@ -43,7 +44,7 @@ namespace Business.Concrete
             var accessToken = _tokenHelper.CreateToken(user, claims);
             return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
         }
-        public IResult Add(string token, string firstName, string lastName,string password, string Email, string Phone, string Address, string City)
+        public IResult Add(string firstName, string lastName,string password, string Email, string Phone, string Address, string City)
         {
             byte[] passwordHash, passwordSalt;
 

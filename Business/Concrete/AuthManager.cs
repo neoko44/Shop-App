@@ -42,21 +42,21 @@ namespace Business.Concrete
             var accessToken = _tokenHelper.CreateToken(user, claims);
             return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
         }
-        public IDataResult<User> Login(UserForLoginDto userForLoginDto)
+        public IDataResult<User> Login(string email,string password)
         {
-            var userToCheck = _userService.GetByMail(userForLoginDto.Email);
+            var userToCheck = _userService.GetByMail(email);
             if (userToCheck == null)
             {
                 return new ErrorDataResult<User>(Messages.UserNotFound);
             }
 
-            if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
+            if (!HashingHelper.VerifyPasswordHash(password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
             {
                 return new ErrorDataResult<User>(Messages.PasswordError);
             }
             return new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
         }
-        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
+        public IDataResult<User> Register(string firstName,string lastName,string email,string phone,string address,string city, string password)
         {
             byte[] passwordHash, passwordSalt;
 
@@ -64,12 +64,12 @@ namespace Business.Concrete
 
             var user = new User
             {
-                FirstName = userForRegisterDto.FirstName,
-                LastName = userForRegisterDto.LastName,
-                Email = userForRegisterDto.Email,
-                Address = userForRegisterDto.Address,
-                City = userForRegisterDto.City,
-                Phone = userForRegisterDto.Phone,
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Address = address,
+                City = city,
+                Phone = phone,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 RoleId = 1002,

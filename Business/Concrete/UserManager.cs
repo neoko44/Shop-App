@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
+using Business.Constants;
 using Core.Entities.Concrete;
+using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
 using System;
 using System.Collections.Generic;
@@ -22,6 +25,7 @@ namespace Business.Concrete
         {
             _userDal.Add(user);
         }
+
 
         public User GetByMail(string email)
         {

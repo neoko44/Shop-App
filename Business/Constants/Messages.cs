@@ -56,5 +56,13 @@ namespace Business.Constants
         public static string NotEnoughBalance = "Yetersiz Bakiye";
 
         public static string NoOrder = "Geçmiş siparişiniz yok";
+
+        public static string UserAdded = "Kullanıcı eklendi";
+        public static string IdCantBeNull = "Id kısmı boş olamaz";
+        public static string CantBeNull = "boş olamaz";
+
+        public static string InvalidToken = "Geçersiz Token";
+
+        public static string QuantityNotValid = "Ürün adedi geçersiz";
     }
 }

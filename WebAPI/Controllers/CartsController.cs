@@ -1,4 +1,7 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Entities.Concrete;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +24,7 @@ namespace WebAPI.Controllers
         [HttpPost("addtocart")]
         public IActionResult AddToCart(int productId, short quantity, string token)
         {
+            
             var result = _cartService.Add(productId, quantity, token);
 
             if (result.Success)

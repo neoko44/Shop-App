@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +25,7 @@ namespace WebAPI.Controllers
         private IOrderService _orderService;
         private ICartService _cartService;
 
-        public AdminController(IUserDal userDal, IProductDal productDal, ICategoryDal categoryDal, ICartDal cartDal, IOrderDal orderDal, IUserService userService, IProductService productService, ICategoryService categoryService, IOrderService orderService, ICartService cartService)
+        public AdminController(IUserDal userDal, IProductDal productDal, ICategoryDal categoryDal, ICartDal cartDal, IOrderDal orderDal, IUserService userService, IProductService productService, ICategoryService categoryService, IOrderService orderService, ICartService cartService, IAdminService adminService)
         {
             _userDal = userDal;
             _productDal = productDal;
@@ -36,19 +37,19 @@ namespace WebAPI.Controllers
             _categoryService = categoryService;
             _orderService = orderService;
             _cartService = cartService;
+            _adminService = adminService;
         }
 
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost("adduser")]
-        public IActionResult AddUser(string token, string firstName, string lastName, string Email, string password, string Phone, string Address, string City)
-        {
-            var result = _adminService.Add(token, firstName, lastName, Email, password, Phone, Address, City);
-            if (result.Success)
-            {
-                return Ok(result.Success);
-            }
-            return BadRequest(result.Message);
-        }
+        //[Authorize(Roles = "Admin")]
+        //[HttpPost("adduser")]
+        //public IActionResult AddUser( string firstName, string lastName, string Email, string password, string Phone, string Address, string City)
+        //{
+        //    if (result.Success)
+        //    {
+        //        return Ok(result.Success);
+        //    }
+        //    return BadRequest(result.Message);
+        //}
     }
 }

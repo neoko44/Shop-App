@@ -46,8 +46,13 @@ namespace Business.Concrete
                                                             //bu mailin veri tabanında denk geldiği kullanıcıyı getir.
 
             var getUserCart = _userCartDal.Get(uc => uc.UserId == user.Id && uc.IsOrder == false);
+            if(getUserCart == null)
+            {
+                return new ErrorDataResult<Cart>("Zaten sipariş verilmiş");
+            }
+            
             var getCartList = _cartDal.GetList(c => c.UserId == user.Id && c.CartId == getUserCart.Id && c.IsOrder == false).ToList();
-            if (getCartList == null)
+            if (getCartList.Count ==0)
             {
                 return new ErrorDataResult<Order>(Messages.CartEmpty);
             }
@@ -113,7 +118,7 @@ namespace Business.Concrete
             //ürünlerin stoklarını düzenle
 
 
-            return new SuccessDataResult<Order>(Messages.OrderCreated);
+            return new SuccessDataResult<Order>(Messages.OrderCreated +"\n" + "Sipariş Numaranız:" + orderId);
         }
         public IDataResult<List<OrderDto>> GetList(string token)
         {
